@@ -1,6 +1,6 @@
 # Escopo
 
-Preencher antes de abrir o desafio para a pessoa candidata. Sem esta página preenchida, o teste não começa.
+O alvo abaixo é o único laboratório do desafio. Janela, prazo, canal e papéis seguem em branco até a Hous3 abrir a avaliação para uma pessoa.
 
 | Campo | Valor |
 | --- | --- |
@@ -16,8 +16,7 @@ Liste só o que pode ser testado. URL, método e ambiente. Um alvo não listado 
 
 | Alvo | Tipo | Ambiente | Observação |
 | --- | --- | --- | --- |
-| | Web | laboratório | |
-| | API | laboratório | |
+| https://offensive-seg-challange-api.onrender.com | API | laboratório | Único host em escopo. Caminho desse host entra; qualquer outro host fica de fora. |
 
 ## Conta de teste
 

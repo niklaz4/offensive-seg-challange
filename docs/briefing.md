@@ -1,6 +1,6 @@
 # Briefing
 
-Você recebe um laboratório fechado: aplicação web e API. O escopo exato, a URL e a janela estão em [`escopo.md`](escopo.md).
+O laboratório é a API em https://offensive-seg-challange-api.onrender.com. Só esse host está em escopo. Janela, papéis e canal de dúvida estão em [`escopo.md`](escopo.md).
 
 A Hous3 olha três coisas, nesta ordem de importância prática: como você conduz o pentest, se a linha de raciocínio fecha, e se o relatório é utilizável por quem vai priorizar e por quem vai corrigir. Quantidade de achado não ganha de nenhuma das três.
 
