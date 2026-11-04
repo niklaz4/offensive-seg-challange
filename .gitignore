@@ -1,0 +1,16 @@
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.burp
+*.har
+__pycache__/
+.venv/
+venv/
+scans/
+*.log
+.DS_Store
+.idea/
+.vscode/
