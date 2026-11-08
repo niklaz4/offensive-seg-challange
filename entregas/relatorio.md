@@ -31,7 +31,7 @@ A superfície foi mapeada a partir da página de login, da especificação OpenA
 - **Quem:** Anônimo consegue; nenhum papel deveria receber o token de reset na resposta.
 - **Impacto:** Qualquer pessoa que saiba o e-mail de um usuário obtém o token de reset diretamente na resposta HTTP e redefine a senha, assumindo a conta. Foi possível assumir a conta do administrador e, a partir dela, acessar chamados e documentos do tenant.
 - **Correção:** Nunca retornar o token de reset na resposta. Enviar apenas por e-mail, com expiração curta, uso único e invalidação após a troca. A resposta do `/forgot` deve ser genérica, independente de o e-mail existir.
-- **Evidência:** `entregas/evidencias/api-auth-forgot.png` ([link](entregas/evidencias/api-auth-forgot.png)), `entregas/evidencias/api-auth-reset.png` ([link](entregas/evidencias/api-auth-reset.png)) (token redactado).
+- **Evidência:** `entregas/evidencias/api-auth-forgot.png` ([link](evidencias/api-auth-forgot.png)), `entregas/evidencias/api-auth-reset.png` ([link](evidencias/api-auth-reset.png)) (token redactado).
 
 ### Autorização quebrada entre papéis e tenants
 
@@ -41,7 +41,7 @@ A superfície foi mapeada a partir da página de login, da especificação OpenA
 - **Quem:** Usuário autenticado não privilegiado (analyst) consegue; apenas o próprio usuário e o admin deveriam acessar os respectivos recursos.
 - **Impacto:** O papel analyst acessa a lista completa de usuários, perfis de outros tenants, chamados e documentos de outros clientes, e executa alterações que deveriam ser restritas ao admin. O `role` e o `client_name` não são validados no servidor, então o isolamento multi-tenant é inexistente. A nota interna de margem negociada de um chamado fica exposta a outros tenants.
 - **Correção:** Validar no servidor se o recurso pertence ao tenant do usuário autenticado (autorização por objeto) e se o papel permite a função (autorização por função). No `PATCH /api/users/me`, aceitar apenas `name`, `email` e `title`, nunca `role` ou `client_name`.
-- **Evidência:** [idor-ticket.png](entregas/evidencias/idor-ticket.png), [idor-ticket2.png](entregas/evidencias/idor-ticket2.png), [idor-ticket3.png](entregas/evidencias/idor-ticket3.png), [idor-ticket4.png](entregas/evidencias/idor-ticket4.png), [idor-documentos.png](entregas/evidencias/idor-documentos.png) e [idor-documentos2.png](entregas/evidencias/idor-documentos2.png).
+- **Evidência:** [idor-ticket.png](evidencias/idor-ticket.png), [idor-ticket2.png](evidencias/idor-ticket2.png), [idor-ticket3.png](evidencias/idor-ticket3.png), [idor-ticket4.png](evidencias/idor-ticket4.png), [idor-documentos.png](evidencias/idor-documentos.png) e [idor-documentos2.png](evidencias/idor-documentos2.png).
 
 ### CORS refletindo origem arbitrária com credenciais
 
@@ -51,7 +51,7 @@ A superfície foi mapeada a partir da página de login, da especificação OpenA
 - **Quem:** Qualquer site externo consegue; apenas o próprio domínio da aplicação deveria ser autorizado.
 - **Impacto:** O servidor reflete qualquer `Origin` com `Access-Control-Allow-Credentials: true` e métodos `GET, POST, PATCH, DELETE`. Um site externo consegue ler respostas autenticadas e executar escrita cross-origin em nome de um usuário logado, desde que o navegador envie o cookie. A proteção atual depende do `SameSite` do cookie, não do servidor.
 - **Correção:** Usar allowlist fixa de origens em vez de refletir o `Origin`. Remover `Allow-Credentials` quando não for necessário e restringir os métodos permitidos. Manter `SameSite` como defesa em profundidade.
-- **Evidência:** [CORS-poc.png](entregas/evidencias/CORS-poc.png), [CORS-failed.png](entregas/evidencias/CORS-failed.png).
+- **Evidência:** [CORS-poc.png](evidencias/CORS-poc.png), [CORS-failed.png](evidencias/CORS-failed.png).
 
 ### XSS refletido na busca
 
@@ -61,7 +61,7 @@ A superfície foi mapeada a partir da página de login, da especificação OpenA
 - **Quem:** Qualquer usuário que abrir o link; o atacante envia a URL maliciosa e o script executa no navegador da vítima.
 - **Impacto:** O parâmetro `q` é refletido sem escape no HTML da página de resultados, executando script no navegador de quem clicar no link.
 - **Correção:** Escapar a saída no front-end (`textContent` ou escape de HTML) e no servidor, e adicionar `Content-Security-Policy` como defesa em profundidade. Não depender apenas de filtro de entrada.
-- **Evidência:** [xss-refletido-campo-de-busca.png](entregas/evidencias/xss-refletido-campo-de-busca.png).
+- **Evidência:** [xss-refletido-campo-de-busca.png](evidencias/xss-refletido-campo-de-busca.png).
 
 ### XSS armazenado em comentário de chamado
 
@@ -71,7 +71,7 @@ A superfície foi mapeada a partir da página de login, da especificação OpenA
 - **Quem:** Usuário autenticado consegue; nenhum usuário deveria executar script no navegador de outro.
 - **Impacto:** O servidor aceita e armazena o payload sem sanitizar e o devolve cru na leitura do chamado. Quem visualizar o comentário executa o script no próprio navegador, permitindo ações em nome da vítima e combinação com o CORS para exfiltração.
 - **Correção:** Sanitizar a entrada no servidor e escapar na saída, usando `textContent` ou escape de HTML no front-end. Adicionar `Content-Security-Policy` como defesa em profundidade.
-- **Evidência:** [xss-armazenado-comentarios-chamados.png](entregas/evidencias/xss-armazenado-comentarios-chamados.png).
+- **Evidência:** [xss-armazenado-comentarios-chamados.png](evidencias/xss-armazenado-comentarios-chamados.png).
 
 ### Especificação OpenAPI exposta
 
@@ -81,7 +81,7 @@ A superfície foi mapeada a partir da página de login, da especificação OpenA
 - **Quem:** Anônimo consegue; a especificação não deveria ser pública em produção.
 - **Impacto:** A especificação completa da API, com rotas, métodos e parâmetros, permite a um atacante mapear toda a superfície sem enumeração, acelerando a exploração dos demais achados.
 - **Correção:** Remover ou proteger a especificação em produção, exigindo autenticação para acessá-la.
-- **Evidência:** [ffuf-documentacao-api-exposta.png](entregas/evidencias/ffuf-documentacao-api-exposta.png), [documentacao-api.png](entregas/evidencias/documentacao-api.png).
+- **Evidência:** [ffuf-documentacao-api-exposta.png](evidencias/ffuf-documentacao-api-exposta.png), [documentacao-api.png](evidencias/documentacao-api.png).
 
 ## Recomendação
 

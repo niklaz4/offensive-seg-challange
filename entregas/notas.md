@@ -58,7 +58,7 @@
 - **O que confirmaria:** `POST /api/auth/reset` com o token retornado alterando a senha de outro usuário.
 - **O que derrubaria:** token inválido, expirado, ou reset exigindo confirmação por e-mail.
 - **O que foi feito:** pedido de reset para o e-mail da admin, uso do token em `/api/auth/reset`, login como admin.
-- **Evidência:** `entregas/evidencias/api-auth-forgot.png` ([link](entregas/evidencias/api-auth-forgot.png)), `entregas/evidencias/api-auth-reset.png` ([link](entregas/evidencias/api-auth-reset.png)) (token redactado).
+- **Evidência:** `entregas/evidencias/api-auth-forgot.png` ([link](evidencias/api-auth-forgot.png)), `entregas/evidencias/api-auth-reset.png` ([link](evidencias/api-auth-reset.png)) (token redactado).
 - **Conclusão:** confirmado; a conta da admin foi assumida.
 - **Confiança:** alta. Subiria a certeza apenas com a confirmação de que o token também é aceito em outro navegador, o que já está implícito pelo uso via cliente HTTP.
 - **Por que esta severidade:** permite assumir qualquer conta, incluindo a de maior privilégio, sem autenticação prévia.
@@ -70,7 +70,7 @@
 - **O que confirmaria:** um analyst acessando dados de outro tenant e executando funções de admin.
 - **O que derrubaria:** respostas 403 para recursos de outro tenant ou para funções de admin.
 - **O que foi feito:** reset e login como Ana e Bruno; comparação de acesso a `/api/users`, `/api/users/{id}`, `/api/tickets`, `/api/documents` e `PATCH /api/users/me` entre os três papéis.
-- **Evidência:** [idor-ticket.png](entregas/evidencias/idor-ticket.png), [idor-ticket2.png](entregas/evidencias/idor-ticket2.png), [idor-ticket3.png](entregas/evidencias/idor-ticket3.png), [idor-ticket4.png](entregas/evidencias/idor-ticket4.png), [idor-documentos.png](entregas/evidencias/idor-documentos.png) e [idor-documentos2.png](entregas/evidencias/idor-documentos2.png).
+- **Evidência:** [idor-ticket.png](evidencias/idor-ticket.png), [idor-ticket2.png](evidencias/idor-ticket2.png), [idor-ticket3.png](evidencias/idor-ticket3.png), [idor-ticket4.png](evidencias/idor-ticket4.png), [idor-documentos.png](evidencias/idor-documentos.png) e [idor-documentos2.png](evidencias/idor-documentos2.png).
 - **Conclusão:** confirmado; os três papéis acessam os mesmos recursos.
 - **Confiança:** alta para leitura; média para escrita cross-tenant, que foi observada em comentário e em `PATCH` no próprio perfil, mas não foi varrida em todos os recursos.
 - **Por que esta severidade:** quebra o isolamento multi-tenant e o modelo de papéis, expondo dados de todos os clientes a qualquer usuário autenticado.
@@ -82,7 +82,7 @@
 - **O que confirmaria:** `GET /api/tickets` e `PATCH /api/users/me` com `Origin: evil` e cookie retornando 200.
 - **O que derrubaria:** `Allow-Origin` fixo no domínio da aplicação, ou ausência de `Allow-Credentials`.
 - **O que foi feito:** `curl` com `Origin: evil` e cookie da admin em leitura e escrita.
-- **Evidência:** [CORS-poc.png](entregas/evidencias/CORS-poc.png), [CORS-failed.png](entregas/evidencias/CORS-failed.png).
+- **Evidência:** [CORS-poc.png](evidencias/CORS-poc.png), [CORS-failed.png](evidencias/CORS-failed.png).
 - **Conclusão:** confirmado no servidor. No navegador, o cookie com `SameSite` restritivo impede o envio cross-origin, então a exploração depende dessa configuração de cookie.
 - **Confiança:** alta para o servidor; média para o impacto no navegador, que depende do `SameSite` e do domínio do cookie.
 - **Por que esta severidade:** a configuração do servidor autoriza leitura e escrita cross-origin; a mitigação atual é do navegador, não da aplicação.
@@ -94,7 +94,7 @@
 - **O que confirmaria:** `<script>` devolvido cru em `GET /api/tickets/{id}`.
 - **O que derrubaria:** escape na saída ou sanitização na entrada.
 - **O que foi feito:** `POST /api/tickets/1/comments` com `<script>alert(1)</script>` e leitura do chamado.
-- **Evidência:** [xss-armazenado-comentarios-chamados.png](entregas/evidencias/xss-armazenado-comentarios-chamados.png).
+- **Evidência:** [xss-armazenado-comentarios-chamados.png](evidencias/xss-armazenado-comentarios-chamados.png).
 - **Conclusão:** confirmado no armazenamento; a execução no navegador não foi observada porque não há front que renderize o comentário no contexto testado.
 - **Confiança:** alta para o armazenamento; média para a execução.
 - **Por que esta severidade:** executa no navegador de quem visualizar o chamado, com impacto alto.
@@ -106,7 +106,7 @@
 - **O que confirmaria:** `<script>` cru na resposta HTML (não escapado) ao buscar o payload.
 - **O que derrubaria:** `&lt;script&gt;` na resposta (escape) ou o valor não refletido no HTML.
 - **O que foi feito:** busca com `q=<script>alert(1)</script>` estando autenticado, e inspeção do HTML retornado.
-- **Evidência:** [xss-refletido-campo-de-busca.png](entregas/evidencias/xss-refletido-campo-de-busca.png).
+- **Evidência:** [xss-refletido-campo-de-busca.png](evidencias/xss-refletido-campo-de-busca.png).
 - **Conclusão:** confirmado; o payload aparece cru no HTML da busca e executa no navegador de quem abrir o link.
 - **Confiança:** alta para o reflexo no HTML; a execução foi observada no contexto da busca autenticada.
 - **Por que esta severidade:** executa no navegador da vítima a partir de um link, com impacto alto; combinado com o CORS, permite exfiltração de sessão.
@@ -118,7 +118,7 @@
 - **O que confirmaria:** o JSON com todas as rotas e parâmetros.
 - **O que derrubaria:** 401 ou 404 no caminho.
 - **O que foi feito:** `GET /api/openapi.json`.
-- **Evidência:** [ffuf-documentacao-api-exposta.png](entregas/evidencias/ffuf-documentacao-api-exposta.png), [documentacao-api.png](entregas/evidencias/documentacao-api.png).
+- **Evidência:** [ffuf-documentacao-api-exposta.png](evidencias/ffuf-documentacao-api-exposta.png), [documentacao-api.png](evidencias/documentacao-api.png).
 - **Conclusão:** confirmado.
 - **Confiança:** alta.
 - **Por que esta severidade:** acelera o mapeamento da superfície.
